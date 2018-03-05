@@ -16,11 +16,8 @@ There is also a wsgi middleware that combines all the options.
 from flask import Flask, make_response
 from opentracing_prometheus import TracerMiddleware
 
-import requests
 import logging
 import sys
-import os
-import datetime
 
 app = Flask('prometheus-tracing')
 
