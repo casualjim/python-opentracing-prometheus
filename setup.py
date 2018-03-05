@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name='opentracing_prometheus',
-  version='0.1.0',
+  version='0.1.1',
   description='OpenTracing Jaeger and Prometheus integration',
   classifiers=[
     'Development Status :: 3 - Alpha',
@@ -10,6 +10,7 @@ setup(
     'Programming Language :: Python :: 2.7',
     'Topic :: System :: Monitoring',
   ],
+  keywords='opentracing jaeger prometheus',
   url='https://github.com/casualjim/python-opentracing-prometheus',
   author='Ivan Porto Carrero',
   license='MIT',
@@ -19,5 +20,6 @@ setup(
     'jaeger-client',
     'prometheus_client',
   ],
-  platforms='any'
+  platforms='any',
+  modules=['six', ]
 )
