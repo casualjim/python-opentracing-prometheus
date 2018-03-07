@@ -6,6 +6,7 @@ from threading import Lock
 from math import ceil
 import six
 import re
+import inspect
 
 
 _INF = float("inf")
@@ -56,7 +57,7 @@ class HTTPMetrics(object):
 
 
   def record(self, span):
-    status_code = int(self.get_tag(span, 'http.status_code'))
+    status_code = self.get_int_tag(span, 'http.status_code')
     sc = status_code/100
 
     endpoint = self.normalize(span.operation_name)
@@ -74,9 +75,22 @@ class HTTPMetrics(object):
     if sc >= 2 and sc <= 5:
       self.status_codes.labels(endpoint, str(sc)+'xx').inc(1)
 
+  def get_int_tag(self, span, key):
+    tg = self.get_tag(span, key)
+    if not tg:
+      return 0
+    return int(tg)
+
   def get_tag(self, span, key):
     for tag in span.tags:
+      if not hasattr(span, 'key'):
+        return ''
       if tag.key == key:
+        if not hasattr(tag, 'value'):
+          print '*********** NO VALUE ***************'
+          print type(tag)
+          print inspect.getmembers(tag)
+          return ''
         return str(tag.value)
 
     return ''
