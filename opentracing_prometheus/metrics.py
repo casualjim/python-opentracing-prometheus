@@ -83,15 +83,10 @@ class HTTPMetrics(object):
 
   def get_tag(self, span, key):
     for tag in span.tags:
-      if not hasattr(span, 'key'):
-        return ''
       if tag.key == key:
-        if not hasattr(tag, 'value'):
-          print '*********** NO VALUE ***************'
-          print type(tag)
-          print inspect.getmembers(tag)
-          return ''
-        return str(tag.value)
+        if hasattr(tag, 'value'):
+          return str(tag.value)
+        break
 
     return ''
 
@@ -113,9 +108,11 @@ class PrometheusReporter(NullReporter):
     )
 
   def report_span(self, span):
-    if span.is_rpc():
-      if not span.is_rpc_client():
-        self._http_metrics.record(span)
+    srv = self.get_tag(span, 'span.kind')
+    surl = self.get_tag(span, 'http.url')
+    smeth = self.get_tag(span, 'http.method')
+    if srv == 'server' and (surl or smeth):
+      self._http_metrics.record(span)
       return
     else:
       self._operation_metrics.labels(self.normalize(span.operation_name)).observe(span.end_time-span.start_time)
@@ -123,7 +120,9 @@ class PrometheusReporter(NullReporter):
   def get_tag(self, span, key):
     for tag in span.tags:
       if tag.key == key:
-        return str(tag.value)
+        if hasattr(tag, 'value'):
+          return str(tag.value)
+        break
 
     return ''
 

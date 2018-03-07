@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name='opentracing_prometheus',
-  version='0.1.3',
+  version='0.1.5',
   description='OpenTracing Jaeger and Prometheus integration',
   classifiers=[
     'Development Status :: 3 - Alpha',
