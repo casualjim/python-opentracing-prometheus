@@ -9,6 +9,7 @@ from prometheus_client import make_wsgi_app
 import opentracing_instrumentation
 from opentracing_instrumentation.interceptors import ClientInterceptors, OpenTracingInterceptor
 import urlparse
+import os
 
 def default_config(service_name):
   return Config(
@@ -19,7 +20,7 @@ def default_config(service_name):
       },
       'logging': True,
       'local_agent': {
-        'reporting_host': 'jaeger-agent',
+        'reporting_host': os.getenv("JAEGER_AGENT", 'jaeger-agent'),
       }
     },
     service_name=service_name,
